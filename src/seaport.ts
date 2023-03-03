@@ -129,12 +129,17 @@ export class Seaport {
       this.provider
     );
 
+    // this.contract = new Contract(
+    //   overrides?.contractAddress ??
+    //     (seaportVersion === "1.4"
+    //       ? CROSS_CHAIN_SEAPORT_V1_4_ADDRESS
+    //       : CROSS_CHAIN_SEAPORT_ADDRESS),
+    //   seaportVersion === "1.4" ? SeaportABIv14 : SeaportABI,
+    //   this.multicallProvider
+    // ) as SeaportContract;
     this.contract = new Contract(
-      overrides?.contractAddress ??
-        (seaportVersion === "1.4"
-          ? CROSS_CHAIN_SEAPORT_V1_4_ADDRESS
-          : CROSS_CHAIN_SEAPORT_ADDRESS),
-      seaportVersion === "1.4" ? SeaportABIv14 : SeaportABI,
+      CROSS_CHAIN_SEAPORT_V1_4_ADDRESS,
+      SeaportABIv14,
       this.multicallProvider
     ) as SeaportContract;
 
