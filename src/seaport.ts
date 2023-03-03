@@ -729,7 +729,7 @@ export class Seaport {
     );
 
     const derivedOrderHash = ethers.utils.keccak256(
-      "0x0" +
+      "0x" +
         [
           orderTypeHash.slice(2),
           orderComponents.offerer.slice(2).padStart(64, "0"),
