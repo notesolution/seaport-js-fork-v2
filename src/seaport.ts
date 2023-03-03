@@ -729,7 +729,7 @@ export class Seaport {
     );
 
     const derivedOrderHash = ethers.utils.keccak256(
-      "0x" +
+      "0x0" +
         [
           orderTypeHash.slice(2),
           orderComponents.offerer.slice(2).padStart(64, "0"),
@@ -790,6 +790,7 @@ export class Seaport {
     recipientAddress = ethers.constants.AddressZero,
     domain = "",
     exactApproval = false,
+    payableOverridesOptions = {},
   }: {
     order: OrderWithCounter;
     unitsToFill?: BigNumberish;
@@ -802,6 +803,7 @@ export class Seaport {
     recipientAddress?: string;
     domain?: string;
     exactApproval?: boolean;
+    payableOverridesOptions?: any;
   }): Promise<
     OrderUseCase<
       ExchangeAction<
@@ -895,6 +897,7 @@ export class Seaport {
           signer: fulfiller,
           tips: tipConsiderationItems,
           domain,
+          payableOverridesOptions,
         },
         exactApproval
       );
@@ -923,6 +926,7 @@ export class Seaport {
         fulfillerOperator,
         recipientAddress,
         domain,
+        payableOverridesOptions,
       },
       exactApproval
     );
@@ -948,6 +952,7 @@ export class Seaport {
     recipientAddress = ethers.constants.AddressZero,
     domain = "",
     exactApproval = false,
+    payableOverridesOptions = {},
   }: {
     fulfillOrderDetails: {
       order: OrderWithCounter;
@@ -962,6 +967,7 @@ export class Seaport {
     recipientAddress?: string;
     domain?: string;
     exactApproval?: boolean;
+    payableOverridesOptions?: any;
   }) {
     const fulfiller = this._getSigner(accountAddress);
 
@@ -1053,6 +1059,7 @@ export class Seaport {
       recipientAddress,
       domain,
       exactApproval,
+      payableOverridesOptions,
     });
   }
 

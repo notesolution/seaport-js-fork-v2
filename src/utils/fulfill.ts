@@ -182,15 +182,17 @@ export async function fulfillBasicOrder(
   {
     order,
     seaportContract,
-    offererBalancesAndApprovals,
-    fulfillerBalancesAndApprovals,
+    // offererBalancesAndApprovals,
+    // fulfillerBalancesAndApprovals,
     timeBasedItemParams,
-    offererOperator,
-    fulfillerOperator,
+    // offererOperator,
+    // fulfillerOperator,
     signer,
     tips = [],
     conduitKey = NO_CONDUIT,
     domain,
+    // exactApproval,
+    payableOverridesOptions = {},
   }: {
     order: Order;
     seaportContract: Seaport;
@@ -203,6 +205,7 @@ export async function fulfillBasicOrder(
     tips?: ConsiderationItem[];
     conduitKey: string;
     domain?: string;
+    payableOverridesOptions?: any;
   },
   exactApproval: boolean
 ): Promise<
@@ -212,6 +215,9 @@ export async function fulfillBasicOrder(
     >
   >
 > {
+  const x1 = exactApproval;
+  console.log(x1);
+
   const { offer, consideration } = order.parameters;
   const considerationIncludingTips = [...consideration, ...tips];
 
@@ -249,15 +255,15 @@ export async function fulfillBasicOrder(
     },
   })[ethers.constants.AddressZero]?.["0"];
 
-  const insufficientApprovals = validateBasicFulfillBalancesAndApprovals({
-    offer,
-    consideration: considerationIncludingTips,
-    offererBalancesAndApprovals,
-    fulfillerBalancesAndApprovals,
-    timeBasedItemParams,
-    offererOperator,
-    fulfillerOperator,
-  });
+  // const insufficientApprovals = validateBasicFulfillBalancesAndApprovals({
+  //   offer,
+  //   consideration: considerationIncludingTips,
+  //   offererBalancesAndApprovals,
+  //   fulfillerBalancesAndApprovals,
+  //   timeBasedItemParams,
+  //   offererOperator,
+  //   fulfillerOperator,
+  // });
 
   const basicOrderParameters: BasicOrderParametersStruct = {
     offerer: order.parameters.offerer,
@@ -285,13 +291,16 @@ export async function fulfillBasicOrder(
     zoneHash: order.parameters.zoneHash,
   };
 
-  const payableOverrides = { value: totalNativeAmount };
+  const payableOverrides = {
+    value: totalNativeAmount,
+    ...payableOverridesOptions,
+  };
 
-  const approvalActions = await getApprovalActions(
-    insufficientApprovals,
-    exactApproval,
-    signer
-  );
+  // const approvalActions = await getApprovalActions(
+  //   insufficientApprovals,
+  //   exactApproval,
+  //   signer
+  // );
 
   const exchangeAction = {
     type: "exchange",
@@ -303,7 +312,10 @@ export async function fulfillBasicOrder(
     ),
   } as const;
 
-  const actions = [...approvalActions, exchangeAction] as const;
+  const actions = [
+    // ...approvalActions,
+    exchangeAction,
+  ] as const;
 
   return {
     actions,
@@ -332,6 +344,7 @@ export async function fulfillStandardOrder(
     recipientAddress,
     signer,
     domain,
+    payableOverridesOptions = {},
   }: {
     order: Order;
     unitsToFill?: BigNumberish;
@@ -351,6 +364,7 @@ export async function fulfillStandardOrder(
     timeBasedItemParams: TimeBasedItemParams;
     signer: Signer;
     domain?: string;
+    payableOverridesOptions?: any;
   },
   exactApproval: boolean
 ): Promise<
@@ -424,7 +438,10 @@ export async function fulfillStandardOrder(
     fulfillerOperator,
   });
 
-  const payableOverrides = { value: totalNativeAmount };
+  const payableOverrides = {
+    value: totalNativeAmount,
+    ...payableOverridesOptions,
+  };
 
   const approvalActions = await getApprovalActions(
     insufficientApprovals,
@@ -484,7 +501,10 @@ export async function fulfillStandardOrder(
         ),
   } as const;
 
-  const actions = [...approvalActions, exchangeAction] as const;
+  const actions = [
+    // ...approvalActions,
+    exchangeAction,
+  ] as const;
 
   return {
     actions,
@@ -539,6 +559,7 @@ export async function fulfillAvailableOrders({
   recipientAddress,
   exactApproval,
   domain,
+  payableOverridesOptions = {},
 }: {
   ordersMetadata: FulfillOrdersMetadata;
   seaportContract: Seaport;
@@ -551,6 +572,7 @@ export async function fulfillAvailableOrders({
   recipientAddress: string;
   exactApproval: boolean;
   domain?: string;
+  payableOverridesOptions?: any;
 }): Promise<
   OrderUseCase<
     ExchangeAction<
@@ -671,7 +693,10 @@ export async function fulfillAvailableOrders({
     }
   );
 
-  const payableOverrides = { value: totalNativeAmount };
+  const payableOverrides = {
+    value: totalNativeAmount,
+    ...payableOverridesOptions,
+  };
 
   const approvalActions = await getApprovalActions(
     totalInsufficientApprovals,
@@ -737,7 +762,10 @@ export async function fulfillAvailableOrders({
     ),
   } as const;
 
-  const actions = [...approvalActions, exchangeAction] as const;
+  const actions = [
+    // ...approvalActions,
+    exchangeAction,
+  ] as const;
 
   return {
     actions,
