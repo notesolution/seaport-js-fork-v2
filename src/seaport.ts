@@ -74,6 +74,7 @@ import { executeAllActions, getTransactionMethods } from "./utils/usecase";
 
 export class Seaport {
   // Provides the raw interface to the contract for flexibility
+  public oldContract: SeaportContract;
   public contract: SeaportContract;
 
   public domainRegistry: DomainRegistryContract;
@@ -106,7 +107,7 @@ export class Seaport {
       ascendingAmountFulfillmentBuffer = 300,
       balanceAndApprovalChecksOnOrderCreation = true,
       conduitKeyToConduit,
-      seaportVersion = "1.1",
+      seaportVersion = "1.4",
     }: SeaportConfig = {}
   ) {
     const provider =
@@ -129,17 +130,18 @@ export class Seaport {
       this.provider
     );
 
-    // this.contract = new Contract(
-    //   overrides?.contractAddress ??
-    //     (seaportVersion === "1.4"
-    //       ? CROSS_CHAIN_SEAPORT_V1_4_ADDRESS
-    //       : CROSS_CHAIN_SEAPORT_ADDRESS),
-    //   seaportVersion === "1.4" ? SeaportABIv14 : SeaportABI,
-    //   this.multicallProvider
-    // ) as SeaportContract;
+    this.oldContract = new Contract(
+      CROSS_CHAIN_SEAPORT_ADDRESS,
+      SeaportABI,
+      this.multicallProvider
+    ) as SeaportContract;
+
     this.contract = new Contract(
-      CROSS_CHAIN_SEAPORT_V1_4_ADDRESS,
-      SeaportABIv14,
+      overrides?.contractAddress ??
+        (seaportVersion === "1.4"
+          ? CROSS_CHAIN_SEAPORT_V1_4_ADDRESS
+          : CROSS_CHAIN_SEAPORT_ADDRESS),
+      seaportVersion === "1.4" ? SeaportABIv14 : SeaportABI,
       this.multicallProvider
     ) as SeaportContract;
 
@@ -796,6 +798,7 @@ export class Seaport {
     domain = "",
     exactApproval = false,
     payableOverridesOptions = {},
+    customSeaportContract = null,
   }: {
     order: OrderWithCounter;
     unitsToFill?: BigNumberish;
@@ -809,6 +812,7 @@ export class Seaport {
     domain?: string;
     exactApproval?: boolean;
     payableOverridesOptions?: any;
+    customSeaportContract?: any;
   }): Promise<
     OrderUseCase<
       ExchangeAction<
@@ -892,7 +896,7 @@ export class Seaport {
       return fulfillBasicOrder(
         {
           order: sanitizedOrder,
-          seaportContract: this.contract,
+          seaportContract: customSeaportContract || this.contract,
           offererBalancesAndApprovals,
           fulfillerBalancesAndApprovals,
           timeBasedItemParams,
@@ -921,7 +925,7 @@ export class Seaport {
         considerationCriteria,
         tips: tipConsiderationItems,
         extraData,
-        seaportContract: this.contract,
+        seaportContract: customSeaportContract || this.contract,
         offererBalancesAndApprovals,
         fulfillerBalancesAndApprovals,
         timeBasedItemParams,
@@ -958,6 +962,7 @@ export class Seaport {
     domain = "",
     exactApproval = false,
     payableOverridesOptions = {},
+    customSeaportContract = null,
   }: {
     fulfillOrderDetails: {
       order: OrderWithCounter;
@@ -973,6 +978,7 @@ export class Seaport {
     domain?: string;
     exactApproval?: boolean;
     payableOverridesOptions?: any;
+    customSeaportContract?: any;
   }) {
     const fulfiller = this._getSigner(accountAddress);
 
@@ -1053,7 +1059,7 @@ export class Seaport {
 
     return fulfillAvailableOrders({
       ordersMetadata,
-      seaportContract: this.contract,
+      seaportContract: customSeaportContract || this.contract,
       fulfillerBalancesAndApprovals,
       currentBlockTimestamp: currentBlock.timestamp,
       ascendingAmountTimestampBuffer:
