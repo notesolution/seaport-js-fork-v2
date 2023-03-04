@@ -27,9 +27,9 @@ import type {
 import { getApprovalActions } from "./approval";
 import {
   BalancesAndApprovals,
-  InsufficientApprovals,
-  validateBasicFulfillBalancesAndApprovals,
-  validateStandardFulfillBalancesAndApprovals,
+  // InsufficientApprovals,
+  // validateBasicFulfillBalancesAndApprovals,
+  // validateStandardFulfillBalancesAndApprovals,
 } from "./balanceAndApprovalCheck";
 import { generateCriteriaResolvers, getItemToCriteriaMap } from "./criteria";
 import { gcd } from "./gcd";
@@ -555,14 +555,14 @@ export type FulfillOrdersMetadata = {
 export async function fulfillAvailableOrders({
   ordersMetadata,
   seaportContract,
-  fulfillerBalancesAndApprovals,
-  fulfillerOperator,
+  // fulfillerBalancesAndApprovals,
+  // fulfillerOperator,
   currentBlockTimestamp,
   ascendingAmountTimestampBuffer,
   conduitKey,
   signer,
   recipientAddress,
-  exactApproval,
+  // exactApproval,
   domain,
   payableOverridesOptions = {},
 }: {
@@ -616,22 +616,22 @@ export async function fulfillAvailableOrders({
   );
 
   let totalNativeAmount = BigNumber.from(0);
-  const totalInsufficientApprovals: InsufficientApprovals = [];
+  // const totalInsufficientApprovals: InsufficientApprovals = [];
   const hasCriteriaItems = false;
 
-  const addApprovalIfNeeded = (
-    orderInsufficientApprovals: InsufficientApprovals
-  ) => {
-    orderInsufficientApprovals.forEach((insufficientApproval) => {
-      if (
-        !totalInsufficientApprovals.find(
-          (approval) => approval.token === insufficientApproval.token
-        )
-      ) {
-        totalInsufficientApprovals.push(insufficientApproval);
-      }
-    });
-  };
+  // const addApprovalIfNeeded = (
+  //   orderInsufficientApprovals: InsufficientApprovals
+  // ) => {
+  //   orderInsufficientApprovals.forEach((insufficientApproval) => {
+  //     if (
+  //       !totalInsufficientApprovals.find(
+  //         (approval) => approval.token === insufficientApproval.token
+  //       )
+  //     ) {
+  //       totalInsufficientApprovals.push(insufficientApproval);
+  //     }
+  //   });
+  // };
 
   ordersMetadataWithAdjustedFills.forEach(
     ({
@@ -639,8 +639,8 @@ export async function fulfillAvailableOrders({
       tips,
       offerCriteria,
       considerationCriteria,
-      offererBalancesAndApprovals,
-      offererOperator,
+      // offererBalancesAndApprovals,
+      // offererOperator,
     }) => {
       const considerationIncludingTips = [
         ...order.parameters.consideration,
@@ -663,19 +663,19 @@ export async function fulfillAvailableOrders({
         })[ethers.constants.AddressZero]?.["0"] ?? BigNumber.from(0)
       );
 
-      const insufficientApprovals = validateStandardFulfillBalancesAndApprovals(
-        {
-          offer: order.parameters.offer,
-          consideration: considerationIncludingTips,
-          offerCriteria,
-          considerationCriteria,
-          offererBalancesAndApprovals,
-          fulfillerBalancesAndApprovals,
-          timeBasedItemParams,
-          offererOperator,
-          fulfillerOperator,
-        }
-      );
+      // const insufficientApprovals = validateStandardFulfillBalancesAndApprovals(
+      //   {
+      //     offer: order.parameters.offer,
+      //     consideration: considerationIncludingTips,
+      //     offerCriteria,
+      //     considerationCriteria,
+      //     offererBalancesAndApprovals,
+      //     fulfillerBalancesAndApprovals,
+      //     timeBasedItemParams,
+      //     offererOperator,
+      //     fulfillerOperator,
+      //   }
+      // );
 
       const offerCriteriaItems = order.parameters.offer.filter(({ itemType }) =>
         isCriteriaItem(itemType)
@@ -694,7 +694,7 @@ export async function fulfillAvailableOrders({
         );
       }
 
-      addApprovalIfNeeded(insufficientApprovals);
+      // addApprovalIfNeeded(insufficientApprovals);
     }
   );
 
@@ -703,11 +703,11 @@ export async function fulfillAvailableOrders({
     ...payableOverridesOptions,
   };
 
-  const approvalActions = await getApprovalActions(
-    totalInsufficientApprovals,
-    exactApproval,
-    signer
-  );
+  // const approvalActions = await getApprovalActions(
+  //   totalInsufficientApprovals,
+  //   exactApproval,
+  //   signer
+  // );
 
   const advancedOrdersWithTips: AdvancedOrder[] = sanitizedOrdersMetadata.map(
     ({ order, unitsToFill = 0, tips, extraData }) => {
