@@ -335,10 +335,10 @@ export async function fulfillStandardOrder(
     tips = [],
     extraData,
     seaportContract,
-    offererBalancesAndApprovals,
-    fulfillerBalancesAndApprovals,
-    offererOperator,
-    fulfillerOperator,
+    // offererBalancesAndApprovals,
+    // fulfillerBalancesAndApprovals,
+    // offererOperator,
+    // fulfillerOperator,
     timeBasedItemParams,
     conduitKey,
     recipientAddress,
@@ -377,6 +377,11 @@ export async function fulfillStandardOrder(
     >
   >
 > {
+  const x1 = exactApproval;
+  if (x1) {
+    console.log(x1);
+  }
+
   // If we are supplying units to fill, we adjust the order by the minimum of the amount to fill and
   // the remaining order left to be fulfilled
   const orderWithAdjustedFills = unitsToFill
