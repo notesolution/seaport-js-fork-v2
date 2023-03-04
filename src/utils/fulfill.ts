@@ -426,28 +426,28 @@ export async function fulfillStandardOrder(
     },
   })[ethers.constants.AddressZero]?.["0"];
 
-  const insufficientApprovals = validateStandardFulfillBalancesAndApprovals({
-    offer,
-    consideration: considerationIncludingTips,
-    offerCriteria,
-    considerationCriteria,
-    offererBalancesAndApprovals,
-    fulfillerBalancesAndApprovals,
-    timeBasedItemParams,
-    offererOperator,
-    fulfillerOperator,
-  });
+  // const insufficientApprovals = validateStandardFulfillBalancesAndApprovals({
+  //   offer,
+  //   consideration: considerationIncludingTips,
+  //   offerCriteria,
+  //   considerationCriteria,
+  //   offererBalancesAndApprovals,
+  //   fulfillerBalancesAndApprovals,
+  //   timeBasedItemParams,
+  //   offererOperator,
+  //   fulfillerOperator,
+  // });
 
   const payableOverrides = {
     value: totalNativeAmount,
     ...payableOverridesOptions,
   };
 
-  const approvalActions = await getApprovalActions(
-    insufficientApprovals,
-    exactApproval,
-    signer
-  );
+  // const approvalActions = await getApprovalActions(
+  //   insufficientApprovals,
+  //   exactApproval,
+  //   signer
+  // );
 
   const isGift = recipientAddress !== ethers.constants.AddressZero;
 
