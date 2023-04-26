@@ -9,7 +9,7 @@ import {
 } from "ethers";
 import { _TypedDataEncoder } from "ethers/lib/utils";
 import { DomainRegistryABI } from "./abi/DomainRegistry";
-import { SeaportABI } from "./abi/Seaport";
+// import { SeaportABI } from "./abi/Seaport";
 import { SeaportABIv14 } from "./abi/Seaport_v1_4";
 import {
   SEAPORT_CONTRACT_NAME,
@@ -21,9 +21,10 @@ import {
   NO_CONDUIT,
   OPENSEA_CONDUIT_KEY,
   OrderType,
-  CROSS_CHAIN_SEAPORT_ADDRESS,
+  // CROSS_CHAIN_SEAPORT_ADDRESS,
   DOMAIN_REGISTRY_ADDRESS,
   CROSS_CHAIN_SEAPORT_V1_4_ADDRESS,
+  CROSS_CHAIN_SEAPORT_V1_5_ADDRESS,
 } from "./constants";
 import type {
   SeaportConfig,
@@ -107,7 +108,7 @@ export class Seaport {
       ascendingAmountFulfillmentBuffer = 300,
       balanceAndApprovalChecksOnOrderCreation = true,
       conduitKeyToConduit,
-      seaportVersion = "1.4",
+      seaportVersion = "1.5",
     }: SeaportConfig = {}
   ) {
     const provider =
@@ -131,17 +132,17 @@ export class Seaport {
     );
 
     this.oldContract = new Contract(
-      CROSS_CHAIN_SEAPORT_ADDRESS,
-      SeaportABI,
+      CROSS_CHAIN_SEAPORT_V1_4_ADDRESS,
+      SeaportABIv14,
       this.multicallProvider
     ) as SeaportContract;
 
     this.contract = new Contract(
       overrides?.contractAddress ??
-        (seaportVersion === "1.4"
-          ? CROSS_CHAIN_SEAPORT_V1_4_ADDRESS
-          : CROSS_CHAIN_SEAPORT_ADDRESS),
-      seaportVersion === "1.4" ? SeaportABIv14 : SeaportABI,
+        (seaportVersion === "1.5"
+          ? CROSS_CHAIN_SEAPORT_V1_5_ADDRESS
+          : CROSS_CHAIN_SEAPORT_V1_4_ADDRESS),
+      SeaportABIv14,
       this.multicallProvider
     ) as SeaportContract;
 
