@@ -302,10 +302,10 @@ export const validateBasicFulfillBalancesAndApprovals = ({
     });
 
   if (insufficientBalances.length > 0) {
-    throw new Error(
-      "The fulfiller does not have the balances needed to fulfill."
-    );
-  }
+  //   throw new Error(
+  //     "The fulfiller does not have the balances needed to fulfill."
+  //   );
+  // }
 
   return insufficientApprovals;
 };
@@ -378,9 +378,9 @@ export const validateStandardFulfillBalancesAndApprovals = ({
     });
 
   if (insufficientBalances.length > 0) {
-    throw new Error(
-      "The fulfiller does not have the balances needed to fulfill."
-    );
+    // throw new Error(
+    //   "The fulfiller does not have the balances needed to fulfill."
+    // );
   }
 
   return insufficientApprovals;
