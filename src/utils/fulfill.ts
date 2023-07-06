@@ -562,6 +562,7 @@ export async function fulfillAvailableOrders({
   conduitKey,
   signer,
   recipientAddress,
+  transactionMethod = 'fulfillAvailableAdvancedOrders',
   // exactApproval,
   domain,
   payableOverridesOptions = {},
@@ -575,6 +576,7 @@ export async function fulfillAvailableOrders({
   conduitKey: string;
   signer: Signer;
   recipientAddress: string;
+  transactionMethod?: string;
   exactApproval: boolean;
   domain?: string;
   payableOverridesOptions?: any;
@@ -583,7 +585,7 @@ export async function fulfillAvailableOrders({
     ExchangeAction<
       ContractMethodReturnType<
         SeaportContract,
-        "fulfillAvailableAdvancedOrders"
+        "fulfillAvailableAdvancedOrders" | "fulfillAvailableOrders"
       >
     >
   >
@@ -742,7 +744,7 @@ export async function fulfillAvailableOrders({
     type: "exchange",
     transactionMethods: getTransactionMethods(
       seaportContract.connect(signer),
-      "fulfillAvailableAdvancedOrders",
+      transactionMethod,
       [
         advancedOrdersWithTips,
         hasCriteriaItems

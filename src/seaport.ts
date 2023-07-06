@@ -964,6 +964,7 @@ export class Seaport {
     exactApproval = false,
     payableOverridesOptions = {},
     customSeaportContract = null,
+    transactionMethod,
   }: {
     fulfillOrderDetails: {
       order: OrderWithCounter;
@@ -976,6 +977,7 @@ export class Seaport {
     accountAddress?: string;
     conduitKey?: string;
     recipientAddress?: string;
+    transactionMethod?: string;
     domain?: string;
     exactApproval?: boolean;
     payableOverridesOptions?: any;
@@ -1069,6 +1071,7 @@ export class Seaport {
       signer: fulfiller,
       conduitKey,
       recipientAddress,
+      transactionMethod,
       domain,
       exactApproval,
       payableOverridesOptions,
