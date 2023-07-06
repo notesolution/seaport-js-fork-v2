@@ -977,7 +977,9 @@ export class Seaport {
     accountAddress?: string;
     conduitKey?: string;
     recipientAddress?: string;
-    transactionMethod?: string;
+    transactionMethod?:
+      | "fulfillAvailableAdvancedOrders"
+      | "fulfillAvailableOrders";
     domain?: string;
     exactApproval?: boolean;
     payableOverridesOptions?: any;
