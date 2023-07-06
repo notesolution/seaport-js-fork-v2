@@ -744,31 +744,46 @@ export async function fulfillAvailableOrders({
 
   const exchangeAction = {
     type: "exchange",
-    transactionMethods: getTransactionMethods(
-      seaportContract.connect(signer),
-      transactionMethod,
-      [
-        advancedOrdersWithTips,
-        hasCriteriaItems
-          ? generateCriteriaResolvers({
-              orders: ordersMetadata.map(({ order }) => order),
-              offerCriterias: ordersMetadata.map(
-                ({ offerCriteria }) => offerCriteria
-              ),
-              considerationCriterias: ordersMetadata.map(
-                ({ considerationCriteria }) => considerationCriteria
-              ),
-            })
-          : [],
-        offerFulfillments,
-        considerationFulfillments,
-        conduitKey,
-        recipientAddress,
-        advancedOrdersWithTips.length,
-        payableOverrides,
-      ],
-      domain
-    ),
+    transactionMethods:
+      transactionMethod === "fulfillAvailableAdvancedOrders"
+        ? getTransactionMethods(
+            seaportContract.connect(signer),
+            "fulfillAvailableAdvancedOrders",
+            [
+              advancedOrdersWithTips,
+              hasCriteriaItems
+                ? generateCriteriaResolvers({
+                    orders: ordersMetadata.map(({ order }) => order),
+                    offerCriterias: ordersMetadata.map(
+                      ({ offerCriteria }) => offerCriteria
+                    ),
+                    considerationCriterias: ordersMetadata.map(
+                      ({ considerationCriteria }) => considerationCriteria
+                    ),
+                  })
+                : [],
+              offerFulfillments,
+              considerationFulfillments,
+              conduitKey,
+              recipientAddress,
+              advancedOrdersWithTips.length,
+              payableOverrides,
+            ],
+            domain
+          )
+        : getTransactionMethods(
+            seaportContract.connect(signer),
+            "fulfillAvailableOrders",
+            [
+              advancedOrdersWithTips,
+              offerFulfillments,
+              considerationFulfillments,
+              conduitKey,
+              advancedOrdersWithTips.length,
+              payableOverrides,
+            ],
+            domain
+          ),
   } as const;
 
   const actions = [
