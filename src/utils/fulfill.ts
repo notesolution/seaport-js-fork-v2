@@ -562,7 +562,7 @@ export async function fulfillAvailableOrders({
   conduitKey,
   signer,
   recipientAddress,
-  transactionMethod = 'fulfillAvailableAdvancedOrders',
+  transactionMethod = "fulfillAvailableAdvancedOrders",
   // exactApproval,
   domain,
   payableOverridesOptions = {},
@@ -576,7 +576,9 @@ export async function fulfillAvailableOrders({
   conduitKey: string;
   signer: Signer;
   recipientAddress: string;
-  transactionMethod?: string;
+  transactionMethod?:
+    | "fulfillAvailableAdvancedOrders"
+    | "fulfillAvailableOrders";
   exactApproval: boolean;
   domain?: string;
   payableOverridesOptions?: any;
